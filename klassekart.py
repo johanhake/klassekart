@@ -51,7 +51,7 @@ visningsalternativ = ["lærer", "elev"]
 
 # Liste med bord som ikke finnes.
 # Borden skrives inn med en indeks til eleven (0, 1, 2, osv) med start lengst frem til venstre (lærervisning).
-bord_savnes = []
+tomme_bord = [4, 15]
 
 # Mål i milimeter
 side_bredde = 210
@@ -83,11 +83,12 @@ random.shuffle(elever)
 
 # Finner avhengige parametrer
 antall_elever = len(elever)
+antall_tomme_bord = len(tomme_bord)
 bord_per_rad = reduce(lambda a, b: a + b, kolonner)
 
 antall_gang = len(kolonner) - 1
 antall_bord_mellomrom = reduce(lambda a, b: a + b, (k - 1 for k in kolonner))
-antal_rader = ceil(antall_elever / bord_per_rad)
+antal_rader = ceil((antall_elever + antall_tomme_bord) / bord_per_rad)
 
 bord_bredde = (side_bredde - (2*margin + antall_gang*gang_bredde + antall_bord_mellomrom*bord_mellomrom))/bord_per_rad
 
@@ -158,11 +159,11 @@ def lag_klassekart(rettning):
         x = margin
         for kol in kolonner:
             for bord in range(kol):
-                if bord_ind in bord_savnes:
+                if bord_ind in tomme_bord:
+                    tegn_bord(dwg, x, y, "")
+                else:
                     tegn_bord(dwg, x, y, navn_ind)
                     navn_ind += 1
-                else:
-                    tegn_bord(dwg, x, y, "")
 
                 x += bord_bredde + bord_mellomrom
                 bord_ind += 1
@@ -192,3 +193,4 @@ def lag_klassekart(rettning):
 # Lager et klassekart for de ulike visningsalternativene
 for alt in visningsalternativ:
     lag_klassekart(alt)
+
