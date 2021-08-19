@@ -51,12 +51,14 @@ visningsalternativ = ["lærer", "elev"]
 
 # Liste med bord som ikke finnes.
 # Borden skrives inn med en indeks til eleven (0, 1, 2, osv) med start lengst frem til venstre (lærervisning).
-tomme_bord = [4, 15]
+# F eks. Fjerne bord 3 og 6 på første raden sett fra læreren.
+# tomme_bord = [2, 5]
+tomme_bord = []
 
 # Mål i milimeter
 side_bredde = 210
 side_høyde = 290
-margin = 15
+margin = 5
 
 gang_bredde = 10
 rad_høyde = 10
@@ -156,7 +158,10 @@ def lag_klassekart(rettning):
     navn_ind = 0
     bord_ind = 0
     for rad in range(antal_rader):
-        x = margin
+        if rettning == "elev":
+            x = side_bredde - bord_bredde - margin
+        else:
+            x = margin
         for kol in kolonner:
             for bord in range(kol):
                 if bord_ind in tomme_bord:
@@ -165,10 +170,16 @@ def lag_klassekart(rettning):
                     tegn_bord(dwg, x, y, navn_ind)
                     navn_ind += 1
 
-                x += bord_bredde + bord_mellomrom
+                if rettning == "elev":
+                    x -= bord_bredde + bord_mellomrom
+                else:
+                    x += bord_bredde + bord_mellomrom
                 bord_ind += 1
 
-            x += gang_bredde - bord_mellomrom
+            if rettning == "elev":
+                x -= gang_bredde - bord_mellomrom
+            else:
+                x += gang_bredde - bord_mellomrom
 
         if rettning == "elev":
             y += rad_høyde + bord_høyde
