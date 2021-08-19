@@ -31,19 +31,19 @@ kolonne = "Fornavn"
 sep = ";"
 
 # Hvilken encoding er csv-filen skriven med: "ISO-8859-1" eller "utf-8"
-csv_encoding = "ISO-8859-1"
+csv_encoding = "utf-8"
 
 # Beskrivelse av rommets fordeling av bord
 kolonner = [2, 3, 2]
 
-# Navn på klassen kan også legge til ekstra 
+# Navn på klassen kan også legge til ekstra
 klasse = "R1 20/21"
 
 # Bruk enheter som pt eller em
 fontStørrelse = "8pt"
 
 # Liste med en kombinasjon av "pdf", "svg" eller "png"
-# NB! png har dårlig oppløsning dpi=72. Fix er å lage siden større 
+# NB! png har dårlig oppløsning dpi=72. Fix er å lage siden større
 output_format = ["pdf"]
 
 # Liste med visningsalternativ: "lærer", "elev"
@@ -107,32 +107,32 @@ def tegn_bord(dwg, x, y, navn_ind):
         navn = elever[navn_ind]
     elif isinstance(navn_ind, str):
         navn = navn_ind
-        
+
     # Legger til en rektangel
     dwg.add(dwg.rect((x*mm, y*mm), (bord_bredde*mm, bord_høyde*mm), 2, 2, stroke="black", fill="white"))
-    
+
     # Setter attributter til teksten
     attribs = {
         "text-anchor": "middle",
         "dominant-baseline": "central",
         "font-size": fontStørrelse
                }
-    
+
     # Legger til navnet
     legg_til_tekst(dwg, x + bord_bredde/2, y + bord_høyde/2, navn, attribs)
 
 # Lager et klassekart
 def lag_klassekart(rettning):
-    
+
     if rettning not in ["lærer", "elev"]:
         raise ValueError("Argumentet 'rettning' må være en av 'lærer' eller 'elev'")
 
     # Oppretter en A4-side
     filnavn = f"klassekart_{klasse.replace(' ', '_').replace('/', '-')}_{rettning}"
     dwg = svgwrite.Drawing(f"{filnavn}.svg", size=(side_bredde*mm, side_høyde*mm))
-    
+
     y = margin
-    
+
     # Overskrift
     legg_til_tekst(dwg, side_bredde/2, y, "Klassekart " + klasse, attribs={
         "text-anchor": "middle",
@@ -140,18 +140,18 @@ def lag_klassekart(rettning):
         "font-weight": "bold"})
 
     y += 2*rad_høyde
-    
+
     if rettning == "lærer":
         y += (rad_høyde + bord_høyde)*antal_rader
 
-    # Tegner kateteret 
+    # Tegner kateteret
     tegn_bord(dwg, (side_bredde-bord_bredde)/2, y, "Kateter")
 
     if rettning == "elev":
         y += rad_høyde + bord_høyde
     else:
         y -= rad_høyde + bord_høyde
-        
+
     navn_ind = 0
     bord_ind = 0
     for rad in range(antal_rader):
@@ -163,12 +163,12 @@ def lag_klassekart(rettning):
                     navn_ind += 1
                 else:
                     tegn_bord(dwg, x, y, "")
-                    
+
                 x += bord_bredde + bord_mellomrom
                 bord_ind += 1
-                
+
             x += gang_bredde - bord_mellomrom
-        
+
         if rettning == "elev":
             y += rad_høyde + bord_høyde
         else:
@@ -176,7 +176,7 @@ def lag_klassekart(rettning):
 
     # Lagrer filen
     dwg.save()
-    
+
     # Håndterer output format
     if "pdf" in output_format or "png" in output_format:
         svg_fil = svg2rlg(f"{filnavn}.svg")
@@ -184,10 +184,10 @@ def lag_klassekart(rettning):
             renderPDF.drawToFile(svg_fil, f"{filnavn}.pdf")
         if "png" in output_format:
             renderPM.drawToFile(svg_fil, f"{filnavn}.png", fmt="png")
-    
+
     if "svg" not in output_format:
         os.remove(f"{filnavn}.svg")
-    
+
 
 # Lager et klassekart for de ulike visningsalternativene
 for alt in visningsalternativ:
