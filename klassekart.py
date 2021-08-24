@@ -33,11 +33,11 @@ sep = ";"
 # Hvilken encoding er csv-filen skriven med: "ISO-8859-1" eller "utf-8"
 csv_encoding = "utf-8"
 
-# Beskrivelse av rommets fordeling av bord
-kolonner = [2, 3, 2]
+# Beskrivelse av rommets fordeling av bord. Antall bord per kolonne
+kolonner = [2, 2, 2]
 
 # Navn på klassen kan også legge til ekstra
-klasse = "R1 20/21"
+klasse = "R1 21/22"
 
 # Bruk enheter som pt eller em
 fontStørrelse = "8pt"
@@ -48,6 +48,9 @@ output_format = ["pdf"]
 
 # Liste med visningsalternativ: "lærer", "elev"
 visningsalternativ = ["lærer", "elev"]
+
+# Plasser elevene etter verdier i en kolonne i csv filen, f eks 2e og 3e klassinger
+sorter_etter = "Kommer snart..."
 
 # Liste med bord som ikke finnes.
 # Borden skrives inn med en indeks til eleven (0, 1, 2, osv) med start lengst frem til venstre (lærervisning).
@@ -134,7 +137,7 @@ def lag_klassekart(rettning):
     filnavn = f"klassekart_{klasse.replace(' ', '_').replace('/', '-')}_{rettning}"
     dwg = svgwrite.Drawing(f"{filnavn}.svg", size=(side_bredde*mm, side_høyde*mm))
 
-    y = margin
+    y = margin*2
 
     # Overskrift
     legg_til_tekst(dwg, side_bredde/2, y, "Klassekart " + klasse, attribs={
